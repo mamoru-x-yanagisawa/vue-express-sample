@@ -5,10 +5,12 @@ import { fetchTasks, createTask, updateTask, deleteTask } from './api/tasks';
 import TaskForm from './components/TaskForm.vue';
 import TaskList from './components/TaskList.vue';
 import IssueDetail from './components/IssueDetail.vue';
+import SettingsModal from './components/SettingsModal.vue';
 
 const tasks = ref<Task[]>([]);
 const error = ref('');
 const showForm = ref(false);
+const showSettings = ref(false);
 const editing = ref<Task | null>(null);
 const selectedTask = ref<Task | null>(null);
 const statusFilter = ref<TaskStatus | 'all'>('all');
@@ -103,7 +105,7 @@ onMounted(load);
             <span class="nav-icon">📊</span>
             <span>ダッシュボード</span>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" @click="showSettings = true">
             <span class="nav-icon">⚙️</span>
             <span>設定</span>
           </li>
@@ -164,6 +166,12 @@ onMounted(load);
       :editing="editing"
       @submit="onFormSubmit"
       @cancel="showForm = false; editing = null"
+    />
+
+    <!-- Settings modal -->
+    <SettingsModal
+      v-if="showSettings"
+      @close="showSettings = false"
     />
   </div>
 </template>
