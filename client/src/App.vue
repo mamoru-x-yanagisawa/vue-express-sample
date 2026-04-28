@@ -6,6 +6,7 @@ import TaskForm from './components/TaskForm.vue';
 import TaskList from './components/TaskList.vue';
 import IssueDetail from './components/IssueDetail.vue';
 import SettingsModal from './components/SettingsModal.vue';
+import { loadAndApplyTheme } from './utils/theme';
 
 const tasks = ref<Task[]>([]);
 const error = ref('');
@@ -75,7 +76,10 @@ function openNewForm() {
   showForm.value = true;
 }
 
-onMounted(load);
+onMounted(() => {
+  loadAndApplyTheme();
+  load();
+});
 </script>
 
 <template>
@@ -178,7 +182,34 @@ onMounted(load);
 
 <style>
 * { box-sizing: border-box; }
-body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif; background: #f1f5f9; }
+
+:root {
+  --bg-page: #f1f5f9;
+  --bg-card: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+  --tab-bg: #e2e8f0;
+  --tab-color: #64748b;
+}
+
+[data-theme='dark'] {
+  --bg-page: #0f172a;
+  --bg-card: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border-color: #334155;
+  --tab-bg: #334155;
+  --tab-color: #94a3b8;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  transition: background 0.2s, color 0.2s;
+}
 </style>
 
 <style scoped>
@@ -221,9 +252,9 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'H
 .nav-icon { font-size: 1rem; }
 
 /* Main content */
-.main-content { flex: 1; overflow-y: auto; padding: 24px; }
+.main-content { flex: 1; overflow-y: auto; padding: 24px; background: var(--bg-page); }
 .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-.page-title { margin: 0; font-size: 1.3rem; font-weight: 700; color: #1e293b; }
+.page-title { margin: 0; font-size: 1.3rem; font-weight: 700; color: var(--text-primary); }
 
 .error-msg {
   color: #dc2626; background: #fee2e2; border: 1px solid #fca5a5;
@@ -231,23 +262,23 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'H
 }
 
 /* Status filter tabs */
-.tabs { display: flex; gap: 2px; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; }
+.tabs { display: flex; gap: 2px; margin-bottom: 16px; border-bottom: 2px solid var(--border-color); }
 .tab {
   padding: 8px 16px; background: none; border: none; cursor: pointer;
-  font-size: 0.875rem; color: #64748b; border-bottom: 2px solid transparent;
+  font-size: 0.875rem; color: var(--tab-color); border-bottom: 2px solid transparent;
   margin-bottom: -2px; transition: all 0.15s; display: flex; align-items: center; gap: 6px;
 }
 .tab:hover { color: #2563eb; }
 .tab.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
 .tab-count {
-  background: #e2e8f0; color: #64748b; border-radius: 100px;
+  background: var(--tab-bg); color: var(--tab-color); border-radius: 100px;
   font-size: 0.72rem; padding: 1px 7px; font-weight: 600;
 }
 .tab.active .tab-count { background: #dbeafe; color: #2563eb; }
 
 /* Table card */
 .table-card {
-  background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
+  background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px;
   overflow: hidden;
 }
 </style>

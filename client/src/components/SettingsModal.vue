@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { applyTheme } from '../utils/theme';
 
 const STORAGE_KEY = 'app-settings';
 
@@ -57,6 +58,7 @@ function onSave() {
     timezone: timezone.value,
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+  applyTheme(theme.value);
   emit('close');
 }
 </script>
@@ -168,49 +170,49 @@ function onSave() {
   display: flex; align-items: center; justify-content: center; z-index: 1000;
 }
 .modal {
-  background: #fff; border-radius: 8px; width: 520px; max-width: 95vw;
+  background: var(--bg-card); border-radius: 8px; width: 520px; max-width: 95vw;
   max-height: 90vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.2);
   display: flex; flex-direction: column;
 }
 .modal-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 24px; border-bottom: 1px solid #e2e8f0; flex-shrink: 0;
+  padding: 18px 24px; border-bottom: 1px solid var(--border-color); flex-shrink: 0;
 }
-.modal-header h2 { margin: 0; font-size: 1.1rem; color: #1a202c; }
+.modal-header h2 { margin: 0; font-size: 1.1rem; color: var(--text-primary); }
 .btn-close {
   background: none; border: none; font-size: 1.1rem; cursor: pointer;
-  color: #718096; padding: 4px 8px; border-radius: 4px;
+  color: var(--text-secondary); padding: 4px 8px; border-radius: 4px;
 }
-.btn-close:hover { background: #f7fafc; color: #2d3748; }
+.btn-close:hover { background: var(--tab-bg); color: var(--text-primary); }
 .modal-body { padding: 24px; overflow-y: auto; }
 .modal-footer {
   display: flex; justify-content: flex-end; gap: 8px;
-  padding: 16px 24px; border-top: 1px solid #e2e8f0; flex-shrink: 0;
+  padding: 16px 24px; border-top: 1px solid var(--border-color); flex-shrink: 0;
 }
 
 .section { margin-bottom: 4px; }
 .section-title { margin: 0 0 12px; font-size: 0.9rem; font-weight: 700; color: #1e3a5f; }
-.divider { border: none; border-top: 1px solid #e2e8f0; margin: 20px 0; }
+.divider { border: none; border-top: 1px solid var(--border-color); margin: 20px 0; }
 
 .field { display: flex; flex-direction: column; gap: 6px; }
-label { font-size: 0.82rem; font-weight: 600; color: #4a5568; }
+label { font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); }
 input[type="text"], select {
-  border: 1px solid #cbd5e0; border-radius: 5px;
+  border: 1px solid var(--border-color); border-radius: 5px;
   padding: 8px 10px; font-size: 0.9rem; outline: none;
-  transition: border-color 0.2s; background: #fff;
+  transition: border-color 0.2s; background: var(--bg-card); color: var(--text-primary);
 }
 input[type="text"]:focus, select:focus { border-color: #3b82f6; }
 
 .radio-group { display: flex; flex-direction: column; gap: 10px; }
 .radio-label {
   display: flex; align-items: center; gap: 8px;
-  font-size: 0.9rem; color: #374151; cursor: pointer;
+  font-size: 0.9rem; color: var(--text-primary); cursor: pointer;
 }
 .radio-label input[type="radio"] { accent-color: #2563eb; width: 16px; height: 16px; }
 
 .toggle-label {
   display: flex; align-items: center; justify-content: space-between;
-  font-size: 0.9rem; font-weight: 600; color: #374151; cursor: pointer;
+  font-size: 0.9rem; font-weight: 600; color: var(--text-primary); cursor: pointer;
 }
 .toggle-wrap { position: relative; display: inline-flex; align-items: center; }
 .toggle-input { opacity: 0; width: 0; height: 0; position: absolute; }
