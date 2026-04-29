@@ -82,23 +82,23 @@ function isOverdue(d: string | null, status: TaskStatus) {
 .issue-table-wrap { overflow-x: auto; }
 .issue-table {
   width: 100%; border-collapse: collapse; font-size: 0.88rem;
-  background: #fff;
+  background: var(--bg-card);
 }
 .issue-table thead tr {
-  background: #f8fafc; border-bottom: 2px solid #e2e8f0;
+  background: var(--bg-secondary); border-bottom: 2px solid var(--border-color);
 }
 .issue-table th {
   padding: 10px 12px; text-align: left; font-size: 0.78rem;
-  font-weight: 700; color: #64748b; white-space: nowrap;
+  font-weight: 700; color: var(--text-secondary); white-space: nowrap;
 }
-.issue-row { border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: background 0.15s; }
-.issue-row:hover { background: #f0f7ff; }
+.issue-row { border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background 0.15s; }
+.issue-row:hover { background: var(--hover-bg); }
 .issue-row.closed { opacity: 0.55; }
 .issue-row td { padding: 10px 12px; vertical-align: middle; }
-.col-title-cell { font-weight: 500; color: #1e3a5f; max-width: 360px; }
-.col-text { color: #475569; white-space: nowrap; }
+.col-title-cell { font-weight: 500; color: var(--text-primary); max-width: 360px; }
+.col-text { color: var(--text-secondary); white-space: nowrap; }
 .overdue { color: #dc2626; font-weight: 600; }
-.empty { color: #94a3b8; text-align: center; padding: 48px 0; }
+.empty { color: var(--text-secondary); text-align: center; padding: 48px 0; }
 .badge {
   display: inline-block; padding: 2px 9px; border-radius: 100px;
   font-size: 0.75rem; font-weight: 600; white-space: nowrap;

@@ -186,21 +186,25 @@ onMounted(() => {
 :root {
   --bg-page: #f1f5f9;
   --bg-card: #ffffff;
+  --bg-secondary: #f8fafc;
   --text-primary: #1e293b;
   --text-secondary: #64748b;
   --border-color: #e2e8f0;
   --tab-bg: #e2e8f0;
   --tab-color: #64748b;
+  --hover-bg: #f0f7ff;
 }
 
 [data-theme='dark'] {
   --bg-page: #0f172a;
   --bg-card: #1e293b;
+  --bg-secondary: #162032;
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
   --border-color: #334155;
   --tab-bg: #334155;
   --tab-color: #94a3b8;
+  --hover-bg: #1e3a5f;
 }
 
 body {

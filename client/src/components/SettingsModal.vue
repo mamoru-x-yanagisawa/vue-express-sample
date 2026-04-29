@@ -191,7 +191,7 @@ function onSave() {
 }
 
 .section { margin-bottom: 4px; }
-.section-title { margin: 0 0 12px; font-size: 0.9rem; font-weight: 700; color: #1e3a5f; }
+.section-title { margin: 0 0 12px; font-size: 0.9rem; font-weight: 700; color: var(--text-primary); }
 .divider { border: none; border-top: 1px solid var(--border-color); margin: 20px 0; }
 
 .field { display: flex; flex-direction: column; gap: 6px; }

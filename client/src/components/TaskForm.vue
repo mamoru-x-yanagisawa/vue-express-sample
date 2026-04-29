@@ -113,34 +113,34 @@ function onSubmit() {
   display: flex; align-items: center; justify-content: center; z-index: 1000;
 }
 .modal {
-  background: #fff; border-radius: 8px; width: 600px; max-width: 95vw;
+  background: var(--bg-card); border-radius: 8px; width: 600px; max-width: 95vw;
   max-height: 90vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.2);
 }
 .modal-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 24px; border-bottom: 1px solid #e2e8f0;
+  padding: 18px 24px; border-bottom: 1px solid var(--border-color);
 }
-.modal-header h2 { margin: 0; font-size: 1.1rem; color: #1a202c; }
+.modal-header h2 { margin: 0; font-size: 1.1rem; color: var(--text-primary); }
 .btn-close {
   background: none; border: none; font-size: 1.1rem; cursor: pointer;
-  color: #718096; padding: 4px 8px; border-radius: 4px;
+  color: var(--text-secondary); padding: 4px 8px; border-radius: 4px;
 }
-.btn-close:hover { background: #f7fafc; color: #2d3748; }
+.btn-close:hover { background: var(--bg-secondary); color: var(--text-primary); }
 .modal-body { padding: 24px; }
 .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
 .field-row { display: flex; gap: 16px; }
 .field-row .field { flex: 1; }
-label { font-size: 0.82rem; font-weight: 600; color: #4a5568; }
+label { font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); }
 .required { color: #e53e3e; }
 input, select, textarea {
-  border: 1px solid #cbd5e0; border-radius: 5px;
+  border: 1px solid var(--border-color); border-radius: 5px;
   padding: 8px 10px; font-size: 0.9rem; outline: none;
-  transition: border-color 0.2s; background: #fff;
+  transition: border-color 0.2s; background: var(--bg-card); color: var(--text-primary);
 }
 input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 .modal-footer {
   display: flex; justify-content: flex-end; gap: 8px;
-  padding-top: 8px; border-top: 1px solid #e2e8f0; margin-top: 8px;
+  padding-top: 8px; border-top: 1px solid var(--border-color); margin-top: 8px;
 }
 .btn-primary {
   background: #2563eb; color: #fff; border: none;
