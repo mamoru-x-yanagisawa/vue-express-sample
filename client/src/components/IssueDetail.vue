@@ -148,7 +148,7 @@ const statusFlow: TaskStatus[] = ['open', 'in_progress', 'resolved', 'closed'];
 .status-open.active, .status-btn.status-open:hover { background: #dbeafe; color: #1d4ed8; }
 .status-in-progress.active, .status-btn.status-in-progress:hover { background: #fef9c3; color: #b45309; }
 .status-resolved.active, .status-btn.status-resolved:hover { background: #dcfce7; color: #15803d; }
-.status-closed.active, .status-btn.status-closed:hover { background: #f1f5f9; color: #64748b; }
+.status-closed.active, .status-btn.status-closed:hover { background: var(--tab-bg); color: var(--tab-color); }
 
 .meta-grid {
   background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px;
