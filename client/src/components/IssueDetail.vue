@@ -105,7 +105,7 @@ const statusFlow: TaskStatus[] = ['open', 'in_progress', 'resolved', 'closed'];
   display: flex; justify-content: flex-end;
 }
 .drawer {
-  background: #fff; width: 520px; max-width: 95vw; height: 100%;
+  background: var(--bg-card); width: 520px; max-width: 95vw; height: 100%;
   display: flex; flex-direction: column;
   box-shadow: -4px 0 24px rgba(0,0,0,0.15);
   animation: slideIn 0.2s ease;
@@ -113,14 +113,14 @@ const statusFlow: TaskStatus[] = ['open', 'in_progress', 'resolved', 'closed'];
 @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 .drawer-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 20px; border-bottom: 1px solid #e2e8f0; flex-shrink: 0;
+  padding: 16px 20px; border-bottom: 1px solid var(--border-color); flex-shrink: 0;
 }
 .drawer-title { display: flex; align-items: center; gap: 10px; }
 .issue-type-label {
   font-size: 0.75rem; font-weight: 700; background: #ede9fe; color: #6d28d9;
   padding: 2px 8px; border-radius: 4px;
 }
-.issue-id { font-size: 0.85rem; color: #94a3b8; }
+.issue-id { font-size: 0.85rem; color: var(--text-secondary); }
 .drawer-actions { display: flex; gap: 8px; align-items: center; }
 .btn-edit {
   background: #f0f7ff; color: #2563eb; border: 1px solid #bfdbfe;
@@ -129,17 +129,17 @@ const statusFlow: TaskStatus[] = ['open', 'in_progress', 'resolved', 'closed'];
 .btn-edit:hover { background: #dbeafe; }
 .btn-close {
   background: none; border: none; font-size: 1.1rem; cursor: pointer;
-  color: #94a3b8; padding: 4px 8px; border-radius: 4px;
+  color: var(--text-secondary); padding: 4px 8px; border-radius: 4px;
 }
-.btn-close:hover { background: #f8fafc; color: #2d3748; }
+.btn-close:hover { background: var(--bg-secondary); color: var(--text-primary); }
 
 .drawer-body { flex: 1; overflow-y: auto; padding: 24px 24px; }
-.issue-title { margin: 0 0 20px; font-size: 1.2rem; color: #1e293b; line-height: 1.4; }
+.issue-title { margin: 0 0 20px; font-size: 1.2rem; color: var(--text-primary); line-height: 1.4; }
 
 .status-buttons { display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
 .status-btn {
   border: 2px solid transparent; border-radius: 100px; padding: 5px 14px;
-  font-size: 0.82rem; font-weight: 600; cursor: pointer; background: #f1f5f9; color: #64748b;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer; background: var(--tab-bg); color: var(--tab-color);
   transition: all 0.15s;
 }
 .status-btn:hover { opacity: 0.8; }
@@ -148,15 +148,15 @@ const statusFlow: TaskStatus[] = ['open', 'in_progress', 'resolved', 'closed'];
 .status-open.active, .status-btn.status-open:hover { background: #dbeafe; color: #1d4ed8; }
 .status-in-progress.active, .status-btn.status-in-progress:hover { background: #fef9c3; color: #b45309; }
 .status-resolved.active, .status-btn.status-resolved:hover { background: #dcfce7; color: #15803d; }
-.status-closed.active, .status-btn.status-closed:hover { background: #f1f5f9; color: #64748b; }
+.status-closed.active, .status-btn.status-closed:hover { background: var(--tab-bg); color: var(--tab-color); }
 
 .meta-grid {
-  background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+  background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px;
   padding: 16px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 10px;
 }
 .meta-row { display: flex; align-items: center; gap: 12px; }
-.meta-label { font-size: 0.78rem; font-weight: 700; color: #64748b; width: 64px; flex-shrink: 0; }
-.meta-value { font-size: 0.88rem; color: #334155; }
+.meta-label { font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); width: 64px; flex-shrink: 0; }
+.meta-value { font-size: 0.88rem; color: var(--text-primary); }
 .badge {
   display: inline-block; padding: 2px 9px; border-radius: 100px;
   font-size: 0.75rem; font-weight: 600;
@@ -167,7 +167,7 @@ const statusFlow: TaskStatus[] = ['open', 'in_progress', 'resolved', 'closed'];
 .prio-low { background: #f1f5f9; color: #64748b; }
 
 .description-section { }
-.desc-label { font-size: 0.82rem; font-weight: 700; color: #64748b; margin-bottom: 8px; }
-.desc-body { font-size: 0.9rem; color: #334155; line-height: 1.7; white-space: pre-wrap; }
-.desc-empty { font-size: 0.88rem; color: #94a3b8; font-style: italic; }
+.desc-label { font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; }
+.desc-body { font-size: 0.9rem; color: var(--text-primary); line-height: 1.7; white-space: pre-wrap; }
+.desc-empty { font-size: 0.88rem; color: var(--text-secondary); font-style: italic; }
 </style>
