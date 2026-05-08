@@ -7,7 +7,8 @@
     "install:all": "cd server && npm install && cd ../client && npm install",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:e2e:report": "playwright show-report"
+    "test:e2e:report": "playwright show-report",
+    "mcp:playwright": "playwright-mcp"
   },
   "version": "1.0.0",
   "description": "",
@@ -25,6 +26,7 @@
   },
   "homepage": "https://github.com/mamoru-x-yanagisawa/vue-express-sample#readme",
   "devDependencies": {
+    "@playwright/mcp": "^0.0.75",
     "@playwright/test": "^1.59.1"
   }
 }
