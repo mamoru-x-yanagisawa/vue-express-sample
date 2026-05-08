@@ -6,7 +6,10 @@ import TaskForm from './components/TaskForm.vue';
 import TaskList from './components/TaskList.vue';
 import IssueDetail from './components/IssueDetail.vue';
 import SettingsModal from './components/SettingsModal.vue';
+import Dashboard from './components/Dashboard.vue';
 import { loadAndApplyTheme } from './utils/theme';
+
+type View = 'dashboard' | 'issues';
 
 const tasks = ref<Task[]>([]);
 const error = ref('');
@@ -15,6 +18,7 @@ const showSettings = ref(false);
 const editing = ref<Task | null>(null);
 const selectedTask = ref<Task | null>(null);
 const statusFilter = ref<TaskStatus | 'all'>('all');
+const currentView = ref<View>('dashboard');
 
 const filteredTasks = computed(() => {
   if (statusFilter.value === 'all') return tasks.value;
@@ -116,13 +120,13 @@ onMounted(() => {
       <!-- Sidebar -->
       <nav class="sidebar">
         <ul>
-          <li class="nav-item active">
-            <span class="nav-icon">📄</span>
-            <span>課題一覧</span>
-          </li>
-          <li class="nav-item">
+          <li class="nav-item" :class="{ active: currentView === 'dashboard' }" @click="currentView = 'dashboard'">
             <span class="nav-icon">📊</span>
             <span>ダッシュボード</span>
+          </li>
+          <li class="nav-item" :class="{ active: currentView === 'issues' }" @click="currentView = 'issues'">
+            <span class="nav-icon">📄</span>
+            <span>課題一覧</span>
           </li>
           <li class="nav-item" @click="showSettings = true">
             <span class="nav-icon">⚙️</span>
@@ -133,6 +137,15 @@ onMounted(() => {
 
       <!-- Main content -->
       <main class="main-content">
+        <!-- Dashboard view -->
+        <Dashboard
+          v-if="currentView === 'dashboard'"
+          :tasks="tasks"
+          @select="selectedTask = $event"
+        />
+
+        <!-- Issues view -->
+        <template v-else>
         <div class="page-header">
           <h1 class="page-title">課題一覧</h1>
         </div>
@@ -167,6 +180,7 @@ onMounted(() => {
             @delete="onDelete"
           />
         </div>
+        </template>
       </main>
     </div>
 

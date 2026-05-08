@@ -22,12 +22,13 @@ router.post("/", (req: Request, res: Response) => {
   }
   const task = db
     .prepare(
-      `INSERT INTO task (title, description, priority, assignee, dueDate, issueType)
-       VALUES (?, ?, ?, ?, ?, ?) RETURNING *`
+      `INSERT INTO task (title, description, status, priority, assignee, dueDate, issueType)
+       VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *`
     )
     .get(
       title.trim(),
       description ?? "",
+      "open",
       priority ?? "normal",
       assignee ?? "",
       dueDate ?? null,
