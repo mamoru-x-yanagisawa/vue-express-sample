@@ -6,6 +6,13 @@ const makeTitle = (suffix = '') => {
   return suffix ? `E2Eテスト_${id}_${suffix}` : `E2Eテスト_${id}`;
 };
 
+/** 課題一覧ビューに切り替えるヘルパー */
+async function goToIssues(page: import('@playwright/test').Page) {
+  await page.goto('/');
+  await page.locator('.nav-item', { hasText: '課題一覧' }).click();
+  await expect(page.locator('.page-title')).toHaveText('課題一覧');
+}
+
 /** 課題を作成して一覧に現れるまで待つヘルパー */
 async function createTask(page: import('@playwright/test').Page, title: string) {
   await page.locator('.btn-new').click();
@@ -16,7 +23,7 @@ async function createTask(page: import('@playwright/test').Page, title: string) 
 
 test.describe('課題の作成', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await goToIssues(page);
   });
 
   test('「課題を追加」ボタンをクリックするとフォームが開くこと', async ({ page }) => {
@@ -91,7 +98,7 @@ test.describe('課題の詳細表示', () => {
 
   test.beforeEach(async ({ page }) => {
     title = makeTitle();
-    await page.goto('/');
+    await goToIssues(page);
     await createTask(page, title);
   });
 
@@ -135,7 +142,7 @@ test.describe('課題のステータス変更', () => {
 
   test.beforeEach(async ({ page }) => {
     title = makeTitle();
-    await page.goto('/');
+    await goToIssues(page);
     await createTask(page, title);
   });
 
@@ -158,7 +165,7 @@ test.describe('課題の編集', () => {
 
   test.beforeEach(async ({ page }) => {
     title = makeTitle();
-    await page.goto('/');
+    await goToIssues(page);
     await createTask(page, title);
   });
 
@@ -195,7 +202,7 @@ test.describe('課題の削除', () => {
   test('削除ボタンをクリックして確認後に課題が消えること', async ({ page }) => {
     // Arrange
     const title = makeTitle();
-    await page.goto('/');
+    await goToIssues(page);
     await createTask(page, title);
 
     // Act
@@ -209,7 +216,7 @@ test.describe('課題の削除', () => {
   test('削除確認ダイアログでキャンセルすると課題が残ること', async ({ page }) => {
     // Arrange
     const title = makeTitle();
-    await page.goto('/');
+    await goToIssues(page);
     await createTask(page, title);
 
     // Act

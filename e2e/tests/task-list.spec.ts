@@ -1,12 +1,19 @@
 import { test, expect } from '@playwright/test';
 
+/** 課題一覧ビューに切り替えるヘルパー */
+async function goToIssues(page: import('@playwright/test').Page) {
+  await page.goto('/');
+  await page.locator('.nav-item', { hasText: '課題一覧' }).click();
+  await expect(page.locator('.page-title')).toHaveText('課題一覧');
+}
+
 test.describe('課題一覧', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await goToIssues(page);
   });
 
   test('ページタイトルと基本レイアウトが表示されること', async ({ page }) => {
-    // Arrange: トップページを開いた状態
+    // Arrange: 課題一覧ビューを開いた状態
 
     // Act: ページの各要素を確認
 
@@ -17,7 +24,7 @@ test.describe('課題一覧', () => {
   });
 
   test('ステータスフィルタータブが全種表示されること', async ({ page }) => {
-    // Arrange: トップページを開いた状態
+    // Arrange: 課題一覧ビューを開いた状態
 
     // Act: タブを取得
 
@@ -43,12 +50,12 @@ test.describe('課題一覧', () => {
   });
 
   test('サイドバーのナビゲーションが表示されること', async ({ page }) => {
-    // Arrange: トップページを開いた状態
+    // Arrange: 課題一覧ビューを開いた状態
 
     // Act: サイドバー要素を取得
 
     // Assert
     await expect(page.locator('.sidebar')).toBeVisible();
-    await expect(page.locator('.nav-item').first()).toContainText('課題一覧');
+    await expect(page.locator('.nav-item').first()).toContainText('ダッシュボード');
   });
 });
