@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { Task } from '../types/task';
+import type { Task, TaskStatus } from '../types/task';
 import {
   statusLabel, statusClass,
   priorityLabel, priorityClass,
@@ -11,7 +11,7 @@ import {
 const props = defineProps<{ tasks: Task[] }>();
 const emit = defineEmits<{ (e: 'select', task: Task): void }>();
 
-const ACTIVE_STATUSES = ['open', 'in_progress'] as const;
+const ACTIVE_STATUSES: readonly TaskStatus[] = ['open', 'in_progress'];
 
 /** ローカルタイムで YYYY-MM-DD 文字列を返す */
 function toLocalDateStr(d: Date): string {
@@ -40,9 +40,19 @@ const dueSoonTasks = computed(() => {
   const limitStr = toLocalDateStr(limitDate);
   return props.tasks.filter((t) => {
     if (!t.dueDate) return false;
-    if (!ACTIVE_STATUSES.includes(t.status as typeof ACTIVE_STATUSES[number])) return false;
+    if (!ACTIVE_STATUSES.includes(t.status)) return false;
     const dateStr = t.dueDate.slice(0, 10);
     return dateStr >= todayStr && dateStr <= limitStr;
+  });
+});
+
+// 期限切れ課題（dueDate が今日より前、未完了）
+const overdueTasks = computed(() => {
+  const todayStr = toLocalDateStr(new Date());
+  return props.tasks.filter((t) => {
+    if (!t.dueDate) return false;
+    if (!ACTIVE_STATUSES.includes(t.status)) return false;
+    return t.dueDate.slice(0, 10) < todayStr;
   });
 });
 
@@ -51,7 +61,7 @@ const highPriorityTasks = computed(() =>
   props.tasks.filter(
     (t) =>
       (t.priority === 'urgent' || t.priority === 'high') &&
-      ACTIVE_STATUSES.includes(t.status as typeof ACTIVE_STATUSES[number]),
+      ACTIVE_STATUSES.includes(t.status),
   ),
 );
 
@@ -60,7 +70,7 @@ const unresolvedBugs = computed(() =>
   props.tasks.filter(
     (t) =>
       t.issueType === 'bug' &&
-      ACTIVE_STATUSES.includes(t.status as typeof ACTIVE_STATUSES[number]),
+      ACTIVE_STATUSES.includes(t.status),
   ),
 );
 </script>
@@ -82,6 +92,26 @@ const unresolvedBugs = computed(() =>
         >
           <span class="summary-count">{{ s.count }}</span>
           <span class="summary-badge badge" :class="s.cls">{{ s.label }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 期限切れ課題 -->
+    <section class="section">
+      <h2 class="section-title">🚨 期限切れ課題</h2>
+      <p v-if="overdueTasks.length === 0" class="empty">該当する課題はありません。</p>
+      <div v-else class="widget-list">
+        <div
+          v-for="task in overdueTasks"
+          :key="task.id"
+          class="widget-row overdue"
+          @click="emit('select', task)"
+        >
+          <span class="badge" :class="typeClass[task.issueType]">{{ typeLabel[task.issueType] }}</span>
+          <span class="badge" :class="priorityClass[task.priority]">{{ priorityLabel[task.priority] }}</span>
+          <span class="task-title">{{ task.title }}</span>
+          <span class="due-date overdue-date">{{ formatDate(task.dueDate) }}</span>
+          <span class="badge" :class="statusClass[task.status]">{{ statusLabel[task.status] }}</span>
         </div>
       </div>
     </section>
@@ -212,6 +242,13 @@ const unresolvedBugs = computed(() =>
   font-size: 0.8rem;
   color: var(--text-secondary);
   white-space: nowrap;
+}
+.overdue-date {
+  color: #dc2626;
+  font-weight: 600;
+}
+.widget-row.overdue {
+  border-left: 3px solid #dc2626;
 }
 
 .badge {

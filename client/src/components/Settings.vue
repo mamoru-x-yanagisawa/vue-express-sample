@@ -57,8 +57,15 @@ const timezones = [
   'UTC',
 ];
 
-// 変更があれば即時保存
-watch([displayName, theme, language, notificationsEnabled, timezone], saveSettings);
+// displayName は入力頻度が高いため debounce で保存
+let saveTimer: ReturnType<typeof setTimeout> | null = null;
+watch(displayName, () => {
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveSettings, 500);
+});
+
+// その他の設定は即時保存
+watch([theme, language, notificationsEnabled, timezone], saveSettings);
 </script>
 
 <template>
@@ -107,7 +114,7 @@ watch([displayName, theme, language, notificationsEnabled, timezone], saveSettin
 
       <!-- 言語 -->
       <section class="section">
-        <h3 class="section-title">言語</h3>
+        <h3 class="section-title">言語 <span class="coming-soon">準備中</span></h3>
         <div class="radio-group">
           <label class="radio-label">
             <input v-model="language" type="radio" value="ja" />
@@ -124,7 +131,7 @@ watch([displayName, theme, language, notificationsEnabled, timezone], saveSettin
 
       <!-- 通知設定 -->
       <section class="section">
-        <h3 class="section-title">通知設定</h3>
+        <h3 class="section-title">通知設定 <span class="coming-soon">準備中</span></h3>
         <label class="toggle-label">
           <span>ブラウザ通知</span>
           <div class="toggle-wrap">
@@ -143,7 +150,7 @@ watch([displayName, theme, language, notificationsEnabled, timezone], saveSettin
 
       <!-- タイムゾーン -->
       <section class="section">
-        <h3 class="section-title">タイムゾーン</h3>
+        <h3 class="section-title">タイムゾーン <span class="coming-soon">準備中</span></h3>
         <div class="field">
           <label for="timezone">タイムゾーン</label>
           <select id="timezone" v-model="timezone">
@@ -206,4 +213,15 @@ input[type="text"]:focus, select:focus { border-color: #3b82f6; }
 .toggle-input:checked + .toggle-slider { background: #2563eb; }
 .toggle-input:checked + .toggle-slider::after { transform: translateX(18px); }
 .hint { margin: 6px 0 0; font-size: 0.78rem; color: #94a3b8; }
+.coming-soon {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: #f1f5f9;
+  color: #64748b;
+  vertical-align: middle;
+  margin-left: 6px;
+}
 </style>

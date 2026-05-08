@@ -19,6 +19,7 @@ describe('Settings.vue', () => {
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();
+    vi.useRealTimers();
   });
 
   // ── 初期値 ────────────────────────────────────────────────
@@ -49,17 +50,22 @@ describe('Settings.vue', () => {
     expect((wrapper.find('input[value="auto"]').element as HTMLInputElement).checked).toBe(true);
   });
 
-  // ── 即時保存 ──────────────────────────────────────────────
+  // ── 保存（displayName は debounce） ───────────────────────
 
-  it('表示名を変更するとlocalStorageに即時保存される', async () => {
+  it('表示名変更後 500ms でlocalStorageに保存される（debounce）', async () => {
+    vi.useFakeTimers();
     const wrapper = mount(Settings);
     await wrapper.find('#displayName').setValue('新しい名前');
+    await nextTick();
+    // debounce 前は保存されない
+    expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+    vi.advanceTimersByTime(500);
     await nextTick();
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)!);
     expect(saved.displayName).toBe('新しい名前');
   });
 
-  it('テーマを変更するとlocalStorageに保存しapplyThemeが呼ばれる', async () => {
+  it('テーマを変更するとlocalStorageに即時保存しapplyThemeが呼ばれる', async () => {
     const wrapper = mount(Settings);
     await wrapper.find('input[value="dark"]').setValue(true);
     await nextTick();
@@ -68,7 +74,7 @@ describe('Settings.vue', () => {
     expect(applyTheme).toHaveBeenCalledWith('dark');
   });
 
-  it('通知設定を変更するとlocalStorageに保存される', async () => {
+  it('通知設定を変更するとlocalStorageに即時保存される', async () => {
     const wrapper = mount(Settings);
     await wrapper.find('input[type="checkbox"]').setValue(true);
     await nextTick();
@@ -76,7 +82,7 @@ describe('Settings.vue', () => {
     expect(saved.notificationsEnabled).toBe(true);
   });
 
-  it('タイムゾーンを変更するとlocalStorageに保存される', async () => {
+  it('タイムゾーンを変更するとlocalStorageに即時保存される', async () => {
     const wrapper = mount(Settings);
     await wrapper.find('#timezone').setValue('Europe/London');
     await nextTick();
@@ -94,5 +100,12 @@ describe('Settings.vue', () => {
     expect(values).toContain('Asia/Tokyo');
     expect(values).toContain('UTC');
     expect(values).toContain('America/New_York');
+  });
+
+  it('未実装セクションに「準備中」バッジが表示される', () => {
+    const wrapper = mount(Settings);
+    const badges = wrapper.findAll('.coming-soon');
+    expect(badges.length).toBe(3); // 言語・通知設定・タイムゾーン
+    badges.forEach((b) => expect(b.text()).toBe('準備中'));
   });
 });
