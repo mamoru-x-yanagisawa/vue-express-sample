@@ -205,12 +205,12 @@ test.describe('ダッシュボード：空状態', () => {
     // Arrange
     await page.goto('/');
 
-    // Assert: 3つのウィジェットセクション（サマリー除く）それぞれに
+    // Assert: 4つのウィジェットセクション（サマリー除く）それぞれに
     // widget-list または .empty のいずれかが存在すること
     const widgetSections = page.locator('.section').filter({
       has: page.locator('.widget-list, .empty'),
     });
-    await expect(widgetSections).toHaveCount(3);
+    await expect(widgetSections).toHaveCount(4);
 
     // 空状態が存在する場合は正しいメッセージが表示されていること
     const emptyMsgs = page.locator('.empty');
