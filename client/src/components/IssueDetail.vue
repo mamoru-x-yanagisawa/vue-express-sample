@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import type { Task, TaskStatus, TaskPriority, TaskType } from '../types/task';
+import type { Task, TaskStatus } from '../types/task';
+import {
+  statusLabel, statusClass,
+  priorityLabel, priorityClass,
+  typeLabel,
+  formatDate, formatDateTime,
+} from '../composables/useTaskMeta';
 
 defineProps<{ task: Task }>();
 const emit = defineEmits<{
@@ -7,32 +13,6 @@ const emit = defineEmits<{
   (e: 'edit', task: Task): void;
   (e: 'status-change', task: Task, status: TaskStatus): void;
 }>();
-
-const statusLabel: Record<TaskStatus, string> = {
-  open: '未対応', in_progress: '処理中', resolved: '処理済み', closed: '完了',
-};
-const statusClass: Record<TaskStatus, string> = {
-  open: 'status-open', in_progress: 'status-in-progress',
-  resolved: 'status-resolved', closed: 'status-closed',
-};
-const priorityLabel: Record<TaskPriority, string> = {
-  urgent: '緊急', high: '高', normal: '中', low: '低',
-};
-const priorityClass: Record<TaskPriority, string> = {
-  urgent: 'prio-urgent', high: 'prio-high', normal: 'prio-normal', low: 'prio-low',
-};
-const typeLabel: Record<TaskType, string> = {
-  task: 'タスク', bug: 'バグ', feature: '要望',
-};
-
-function formatDate(d: string | null) {
-  if (!d) return '—';
-  return d.slice(0, 10);
-}
-
-function formatDateTime(d: string) {
-  return d.slice(0, 16).replace('T', ' ');
-}
 
 const statusFlow: TaskStatus[] = ['open', 'in_progress', 'resolved', 'closed'];
 </script>
@@ -77,7 +57,7 @@ const statusFlow: TaskStatus[] = ['open', 'in_progress', 'resolved', 'closed'];
           </div>
           <div class="meta-row">
             <span class="meta-label">期限日</span>
-            <span class="meta-value">{{ formatDate(task.dueDate) }}</span>
+            <span class="meta-value">{{ formatDate(task.dueDate) || '—' }}</span>
           </div>
           <div class="meta-row">
             <span class="meta-label">登録日</span>

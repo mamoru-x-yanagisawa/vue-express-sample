@@ -1,64 +1,56 @@
 # Copilot Instructions
 
-## 前提
+チームメンバーが課題をスムーズに管理できる Jira 風の課題管理ツールを、Vue 3 + Express + SQLite で提供する。
 
-- 日本語で回答すること
+## 最重要原則
 
-## プロジェクト概要
-
-課題管理ツール（Jira 風）。Vue 3 + Express + SQLite のモノレポ構成。
-
-- `client/` — Vue 3 + Vite + TypeScript（フロントエンド）
-- `server/` — Express + TypeScript + Node.js built-in SQLite（バックエンド）
-
-## 開発コマンド
-
-```bash
-# 依存インストール
-npm run install:all
-
-# サーバー起動（ポート 3000）
-npm run server
-
-# クライアント起動（ポート 5173）
-npm run client
-```
-
-Vite の dev サーバーは `/api` を `http://localhost:3000` にプロキシする。
-
-## アーキテクチャ
+- 回答・コメント・UI テキストはすべて **日本語** で書く
+- 機能開発は `develop` を最新化してから新ブランチを切る。PR は `develop` へ出す
+- コードレビューは PR に対して行う
 
 ## コーディング規約
 
-### Vue コンポーネント
+### 共通
 
-- **必ず** `<script setup lang="ts">` を使う（Options API は使わない）
-- Props は `defineProps<{ ... }>()` でジェネリクス型を使う
+- TypeScript の `strict: true` を維持する。`any` は使わない
+- クライアントとサーバーで型定義は共有しない（それぞれ独立して定義する）
+
+### Vue（`client/`）
+
+- `<script setup lang="ts">` を使う（Options API 禁止）
+- Props は `defineProps<{ ... }>()` のジェネリクス形式で型付けする
 - Emits は `defineEmits<{ (e: 'event', ...): void }>()` で型付けする
-- スタイルは `<style scoped>` で書く
-- CSS フレームワークは使わず、手書き CSS のみ
+- スタイルは `<style scoped>` に書く。CSS フレームワークは使わず手書き CSS のみ
+- カラーパレット: プライマリ `#2563eb`、ヘッダー背景 `#1e3a5f`
+- バッジは `border-radius: 100px` の pill 形式を使う
 
-### TypeScript
+### Express（`server/`）
 
-- `strict: true` を維持する
-- `any` は使わない。型不明の箇所は適切な型またはジェネリクスで対応する
-- クライアント・サーバーで型定義は共有しない（それぞれ独立して定義する）
-
-### API / サーバー
-
-- DB 操作は `better-sqlite3` ではなく Node.js built-in の `node:sqlite`（`DatabaseSync`）を使う
-- SQL は prepared statements（`db.prepare(...).get/all/run`）で書く
-- PUT エンドポイントはパーシャル更新パターンを使う（リクエストにないフィールドは既存値を維持）
+- DB は Node.js built-in の `node:sqlite`（`DatabaseSync`）を使う。`better-sqlite3` は使わない
+- SQL は prepared statements（`.prepare(...).get/all/run`）で書く
+- PUT エンドポイントはパーシャル更新パターン：リクエストにないフィールドは既存値を維持する
 - バリデーションエラーは `400`、Not Found は `404` を返す
 
-## UI・UX
+### ディレクトリ
 
-- **UI テキストはすべて日本語**で記述する
-- カラーパレットは既存のデザインに合わせる（プライマリ: `#2563eb`、ヘッダー背景: `#1e3a5f`）
-- バッジスタイルは `border-radius: 100px` の pill 形式を使う
+- 新しい API エンドポイント → `server/src/routes/` にファイル追加 → `index.ts` でマウント
+- 新しい Vue コンポーネント → `client/src/components/`
+- 新しい型 → 既存の型ファイル（`client/src/types/task.ts` / `server/src/entity/Task.ts`）に追加、または機能ごとに新ファイルを作る
 
-## ディレクトリ追加時のガイドライン
+## レビュー観点
 
-- 新しい API エンドポイントは `server/src/routes/` にファイルを追加し、`index.ts` でマウントする
-- 新しい Vue コンポーネントは `client/src/components/` に追加する
-- 新しい型は既存の型ファイル（`types/task.ts` / `entity/Task.ts`）に追加するか、機能ごとに新ファイルを作る
+- `strict: true` に違反する型が混入していないか（特に `any`）
+- Vue コンポーネントが `<script setup lang="ts">` を使っているか
+- DB 操作が prepared statements を使っているか
+- PUT が既存値を上書きせず partial update になっているか
+- エラーレスポンスのステータスコードが適切か（400 / 404）
+- UI テキストが日本語になっているか
+
+## 禁止事項
+
+- `any` の使用
+- Options API（`export default { ... }`）の使用
+- `better-sqlite3` や生の SQL 文字列結合（SQL インジェクション対策）
+- CSS フレームワーク（Tailwind、Bootstrap など）の導入
+- クライアント・サーバー間での型定義の直接共有
+- `develop` や `main` への直接コミット（必ずブランチ経由）

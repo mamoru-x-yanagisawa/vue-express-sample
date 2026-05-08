@@ -1,36 +1,17 @@
 <script setup lang="ts">
-import type { Task, TaskStatus, TaskPriority, TaskType } from '../types/task';
+import type { Task, TaskStatus } from '../types/task';
+import {
+  statusLabel, statusClass,
+  priorityLabel, priorityClass,
+  typeLabel, typeClass,
+  formatDate,
+} from '../composables/useTaskMeta';
 
 defineProps<{ tasks: Task[] }>();
 const emit = defineEmits<{
   (e: 'select', task: Task): void;
   (e: 'delete', id: number): void;
 }>();
-
-const statusLabel: Record<TaskStatus, string> = {
-  open: '未対応', in_progress: '処理中', resolved: '処理済み', closed: '完了',
-};
-const statusClass: Record<TaskStatus, string> = {
-  open: 'status-open', in_progress: 'status-in-progress',
-  resolved: 'status-resolved', closed: 'status-closed',
-};
-const priorityLabel: Record<TaskPriority, string> = {
-  urgent: '緊急', high: '高', normal: '中', low: '低',
-};
-const priorityClass: Record<TaskPriority, string> = {
-  urgent: 'prio-urgent', high: 'prio-high', normal: 'prio-normal', low: 'prio-low',
-};
-const typeLabel: Record<TaskType, string> = {
-  task: 'タスク', bug: 'バグ', feature: '要望',
-};
-const typeClass: Record<TaskType, string> = {
-  task: 'type-task', bug: 'type-bug', feature: 'type-feature',
-};
-
-function formatDate(d: string | null) {
-  if (!d) return '';
-  return d.slice(0, 10);
-}
 
 function isOverdue(d: string | null, status: TaskStatus) {
   if (!d || status === 'closed' || status === 'resolved') return false;

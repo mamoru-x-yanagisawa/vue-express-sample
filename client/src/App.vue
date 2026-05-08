@@ -6,7 +6,10 @@ import TaskForm from './components/TaskForm.vue';
 import TaskList from './components/TaskList.vue';
 import IssueDetail from './components/IssueDetail.vue';
 import SettingsModal from './components/SettingsModal.vue';
+import Dashboard from './components/Dashboard.vue';
 import { loadAndApplyTheme } from './utils/theme';
+
+type View = 'dashboard' | 'issues';
 
 const tasks = ref<Task[]>([]);
 const error = ref('');
@@ -15,6 +18,7 @@ const showSettings = ref(false);
 const editing = ref<Task | null>(null);
 const selectedTask = ref<Task | null>(null);
 const statusFilter = ref<TaskStatus | 'all'>('all');
+const currentView = ref<View>('dashboard');
 
 const filteredTasks = computed(() => {
   if (statusFilter.value === 'all') return tasks.value;
@@ -41,15 +45,20 @@ async function onFormSubmit(payload: {
   title: string; description: string; priority: TaskPriority;
   assignee: string; dueDate: string | null; issueType: TaskType; status?: TaskStatus;
 }) {
-  if (editing.value) {
-    const updated = await updateTask(editing.value.id, payload);
-    if (selectedTask.value?.id === editing.value.id) selectedTask.value = updated;
-  } else {
-    await createTask(payload);
+  try {
+    error.value = '';
+    if (editing.value) {
+      const updated = await updateTask(editing.value.id, payload);
+      if (selectedTask.value?.id === editing.value.id) selectedTask.value = updated;
+    } else {
+      await createTask(payload);
+    }
+    editing.value = null;
+    showForm.value = false;
+    await load();
+  } catch {
+    error.value = editing.value ? '課題の更新に失敗しました。' : '課題の作成に失敗しました。';
   }
-  editing.value = null;
-  showForm.value = false;
-  await load();
 }
 
 function onEdit(task: Task) {
@@ -59,16 +68,26 @@ function onEdit(task: Task) {
 }
 
 async function onStatusChange(task: Task, status: TaskStatus) {
-  const updated = await updateTask(task.id, { status });
-  selectedTask.value = updated;
-  await load();
+  try {
+    error.value = '';
+    const updated = await updateTask(task.id, { status });
+    selectedTask.value = updated;
+    await load();
+  } catch {
+    error.value = 'ステータスの更新に失敗しました。';
+  }
 }
 
 async function onDelete(id: number) {
   if (!confirm('この課題を削除しますか？')) return;
-  await deleteTask(id);
-  if (selectedTask.value?.id === id) selectedTask.value = null;
-  await load();
+  try {
+    error.value = '';
+    await deleteTask(id);
+    if (selectedTask.value?.id === id) selectedTask.value = null;
+    await load();
+  } catch {
+    error.value = '課題の削除に失敗しました。';
+  }
 }
 
 function openNewForm() {
@@ -101,13 +120,13 @@ onMounted(() => {
       <!-- Sidebar -->
       <nav class="sidebar">
         <ul>
-          <li class="nav-item active">
-            <span class="nav-icon">📄</span>
-            <span>課題一覧</span>
-          </li>
-          <li class="nav-item">
+          <li class="nav-item" :class="{ active: currentView === 'dashboard' }" @click="currentView = 'dashboard'">
             <span class="nav-icon">📊</span>
             <span>ダッシュボード</span>
+          </li>
+          <li class="nav-item" :class="{ active: currentView === 'issues' }" @click="currentView = 'issues'">
+            <span class="nav-icon">📄</span>
+            <span>課題一覧</span>
           </li>
           <li class="nav-item" @click="showSettings = true">
             <span class="nav-icon">⚙️</span>
@@ -118,6 +137,15 @@ onMounted(() => {
 
       <!-- Main content -->
       <main class="main-content">
+        <!-- Dashboard view -->
+        <Dashboard
+          v-if="currentView === 'dashboard'"
+          :tasks="tasks"
+          @select="selectedTask = $event"
+        />
+
+        <!-- Issues view -->
+        <template v-else>
         <div class="page-header">
           <h1 class="page-title">課題一覧</h1>
         </div>
@@ -152,6 +180,7 @@ onMounted(() => {
             @delete="onDelete"
           />
         </div>
+        </template>
       </main>
     </div>
 
