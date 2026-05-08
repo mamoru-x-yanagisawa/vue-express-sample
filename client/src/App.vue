@@ -5,16 +5,15 @@ import { fetchTasks, createTask, updateTask, deleteTask } from './api/tasks';
 import TaskForm from './components/TaskForm.vue';
 import TaskList from './components/TaskList.vue';
 import IssueDetail from './components/IssueDetail.vue';
-import SettingsModal from './components/SettingsModal.vue';
+import Settings from './components/Settings.vue';
 import Dashboard from './components/Dashboard.vue';
 import { loadAndApplyTheme } from './utils/theme';
 
-type View = 'dashboard' | 'issues';
+type View = 'dashboard' | 'issues' | 'settings';
 
 const tasks = ref<Task[]>([]);
 const error = ref('');
 const showForm = ref(false);
-const showSettings = ref(false);
 const editing = ref<Task | null>(null);
 const selectedTask = ref<Task | null>(null);
 const statusFilter = ref<TaskStatus | 'all'>('all');
@@ -128,7 +127,7 @@ onMounted(() => {
             <span class="nav-icon">📄</span>
             <span>課題一覧</span>
           </li>
-          <li class="nav-item" @click="showSettings = true">
+          <li class="nav-item" :class="{ active: currentView === 'settings' }" @click="currentView = 'settings'">
             <span class="nav-icon">⚙️</span>
             <span>設定</span>
           </li>
@@ -143,6 +142,9 @@ onMounted(() => {
           :tasks="tasks"
           @select="selectedTask = $event"
         />
+
+        <!-- Settings view -->
+        <Settings v-else-if="currentView === 'settings'" />
 
         <!-- Issues view -->
         <template v-else>
@@ -199,12 +201,6 @@ onMounted(() => {
       :editing="editing"
       @submit="onFormSubmit"
       @cancel="showForm = false; editing = null"
-    />
-
-    <!-- Settings modal -->
-    <SettingsModal
-      v-if="showSettings"
-      @close="showSettings = false"
     />
   </div>
 </template>
