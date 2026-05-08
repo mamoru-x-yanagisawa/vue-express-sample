@@ -119,15 +119,15 @@ onMounted(() => {
       <!-- Sidebar -->
       <nav class="sidebar">
         <ul>
-          <li class="nav-item" :class="{ active: currentView === 'dashboard' }" @click="currentView = 'dashboard'">
+          <li class="nav-item" data-view="dashboard" :class="{ active: currentView === 'dashboard' }" @click="currentView = 'dashboard'">
             <span class="nav-icon">📊</span>
             <span>ダッシュボード</span>
           </li>
-          <li class="nav-item" :class="{ active: currentView === 'issues' }" @click="currentView = 'issues'">
+          <li class="nav-item" data-view="issues" :class="{ active: currentView === 'issues' }" @click="currentView = 'issues'">
             <span class="nav-icon">📄</span>
             <span>課題一覧</span>
           </li>
-          <li class="nav-item" :class="{ active: currentView === 'settings' }" @click="currentView = 'settings'">
+          <li class="nav-item" data-view="settings" :class="{ active: currentView === 'settings' }" @click="currentView = 'settings'">
             <span class="nav-icon">⚙️</span>
             <span>設定</span>
           </li>
